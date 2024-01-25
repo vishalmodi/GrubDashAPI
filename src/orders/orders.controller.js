@@ -16,12 +16,8 @@ const list = (req, res, next) => {
 
 // used to check whether the order exist for a given orderId or not
 const orderExists = (req, res, next) => {
-//   console.log("orderExists", req.params);
-  const { orderId, urlId } = req.params;
+  const { orderId } = req.params;
   let filterCond = (d) => d.id === orderId;
-  if (urlId) {
-    // filterDish = (u) => u.id == useId && u.urlId == urlId;
-  }
   const foundOrder = orders.find(filterCond);
   if (foundOrder) {
     res.locals.order = foundOrder;
@@ -40,6 +36,7 @@ const read = (req, res, next) => {
   res.json({ data: order });
 };
 
+// this method create new order
 const create = (req, res, next) => {
   const { data: { deliverTo, mobileNumber } = {} } = req.body;
   let newOrder = {
@@ -53,6 +50,7 @@ const create = (req, res, next) => {
   res.status(201).json({ data: newOrder });
 };
 
+// this method update existing order
 const update = (req, res, next) => {
   const { data: { id, deliverTo, mobileNumber, status } = {} } = req.body;
   const order = res.locals.order;
@@ -83,6 +81,7 @@ const update = (req, res, next) => {
   res.json({ data: order });
 };
 
+// this delete the existing order
 const destroy = (req, res, next) => {
   const order = res.locals.order;
   const foundIndex = orders.findIndex((o) => o.id == order.id);
@@ -101,10 +100,14 @@ module.exports = {
   ],
   update: [
     orderExists,
+    // validate property must be prevent and have value
     propertyValidator.missingPropertyAndStringValue(fileName, "deliverTo"),
     propertyValidator.missingPropertyAndStringValue(fileName, "mobileNumber"),
+    // validate dishes included in the order
     validDishProperty(),
+    // validate orde status
     validateOrderStatus(),
+    // finally update the order
     update,
   ],
   delete: [orderExists, canOrderDelete(), destroy],

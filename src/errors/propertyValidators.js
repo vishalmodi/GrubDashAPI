@@ -31,23 +31,6 @@ const missingPropertyAndValidNumber = (fileName, propertyName) => {
     }
 
     return next();
-    // if (
-    //   data[propertyName] &&
-    //   (data[propertyName] > 0 || Number.isInteger(data[propertyName]))
-    // ) {
-    //   return next();
-    // }
-
-    // let message = "";
-    // if (!data[propertyName]) {
-    //   message = `${fileName} must include a ${propertyName}`;
-    // } else {
-    //   message = `${fileName} must have a ${propertyName} that is an integer greater than 0`;
-    // }
-    // next({
-    //   status: 400,
-    //   message: message,
-    // });
   };
 };
 
